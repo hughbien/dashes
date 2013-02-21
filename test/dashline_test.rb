@@ -56,4 +56,43 @@ class DashlineTableTest < MiniTest::Unit::TestCase
       "+-------+--------+-------+",
       table.to_s)
   end
+
+  def test_width
+    table = Dashline::Table.new
+    table.width 26
+    table.row '1', '2', '3'
+    assert_equal(
+      "+--------+-------+-------+\n" +
+      "| 1      | 2     | 3     |\n" +
+      "+--------+-------+-------+",
+      table.to_s)
+
+    table.spacing :min, :min, :max
+    assert_equal(
+      "+---+---+----------------+\n" +
+      "| 1 | 2 | 3              |\n" +
+      "+---+---+----------------+",
+      table.to_s)
+
+    table.spacing :max, :max, :min
+    assert_equal(
+      "+----------+---------+---+\n" +
+      "| 1        | 2       | 3 |\n" +
+      "+----------+---------+---+",
+      table.to_s)
+
+    table.spacing :min, :min, :min
+    assert_equal(
+      "+--------+-------+-------+\n" +
+      "| 1      | 2     | 3     |\n" +
+      "+--------+-------+-------+",
+      table.to_s)
+
+    table.spacing :max, :max, :max
+    assert_equal(
+      "+--------+-------+-------+\n" +
+      "| 1      | 2     | 3     |\n" +
+      "+--------+-------+-------+",
+      table.to_s)
+  end
 end

@@ -9,6 +9,8 @@ module Dashline
       @rows = []
       @separators = []
       @aligns = []
+      @width = nil
+      @spacing = nil
     end
 
     def row(*data)
@@ -21,6 +23,14 @@ module Dashline
 
     def align(*alignments)
       @aligns = alignments
+    end
+
+    def width(width)
+      @width = width
+    end
+
+    def spacing(*spacing)
+      @spacing = spacing
     end
 
     def to_s
@@ -68,7 +78,25 @@ module Dashline
           widths[col] = [row[col].length, widths[col]].max
         end
       end
-      widths
+      pad = (2 * cols) + (cols + 1) # cell padding/borders
+      sum = widths.reduce {|a,b| a+b} + pad
+      if @width.nil? || sum == @width
+        widths
+      else
+        indexes = (0...cols).to_a
+        if @spacing && @spacing.uniq.length > 1
+          # which columns to spread the padding within
+          cols = @spacing.select { |s| s == :max }.length
+          indexes = @spacing.each_index.select { |i| @spacing[i] == :max }
+        end
+        pad = (@width - sum) / cols
+        uneven = (@width - sum) % cols
+        indexes.each do |index|
+          widths[index] += pad
+          widths[index] += 1 if index < uneven
+        end
+        widths
+      end
     end
   end
 end
