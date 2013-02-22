@@ -22,8 +22,7 @@ TODO
 
 * find better way to grab # of cols
 * handle colorized strings when determining strlen
-* add layout class, handle tables side by side
-* add layout option (min/max per widget)
+* add layout options
 * add bar chart
 * add bar chart "separator" and "annotations/titles"
 * add bar chart width option

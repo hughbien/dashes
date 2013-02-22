@@ -51,6 +51,16 @@ module Dashline
       format.join("\n")
     end
 
+    def total_height
+      @rows.length + @separators.length + 2 # 2 for top/bottom borders
+    end
+
+    def total_width
+      width = @width || col_widths.reduce { |a,b| a+b }
+      cols = @rows.first.size
+      width + (2 * cols) + (cols + 1)
+    end
+
     private
 
     def cell(data, width, align=:left)
@@ -97,6 +107,38 @@ module Dashline
         end
         widths
       end
+    end
+  end
+
+  class Layout
+    def initialize
+      @nodes = []
+      @width = 80
+    end
+
+    def add(node)
+      @nodes << node
+    end
+
+    def width(width)
+      @width = width
+    end
+
+    def to_s
+      buffer = []
+      max_width = @nodes.map(&:total_width).max
+      @nodes.each do |node|
+        if (index = buffer.index { |l| l.length < @width })
+          node.to_s.split("\n").each do |line|
+            buffer[index] = " "*(buffer[index-1].length-line.length-1) if buffer[index].nil?
+            buffer[index] += " #{line}"
+            index += 1
+          end
+        else
+          buffer += node.to_s.split("\n")
+        end
+      end
+      buffer.join("\n")
     end
   end
 end
