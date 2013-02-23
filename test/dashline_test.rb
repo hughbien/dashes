@@ -97,8 +97,8 @@ class DashlineTableTest < MiniTest::Unit::TestCase
   end
 end
 
-class DashlineLayoutTest < MiniTest::Unit::TestCase
-  def test_basic_layout
+class DashlineGridTest < MiniTest::Unit::TestCase
+  def test_basic_grid
     table = Dashline::Table.new
     table.row 'a', 'a', 'a'
     table.separator
@@ -110,11 +110,11 @@ class DashlineLayoutTest < MiniTest::Unit::TestCase
     table3 = Dashline::Table.new
     table3.row 'c', 'c', 'c'
 
-    layout = Dashline::Layout.new
-    layout.width 27
-    layout.add table
-    layout.add table2
-    layout.add table3
+    grid = Dashline::Grid.new
+    grid.width 27
+    grid.add table
+    grid.add table2
+    grid.add table3
 
     assert_equal(
       "+---+---+---+ +---+---+---+\n" +
@@ -124,18 +124,18 @@ class DashlineLayoutTest < MiniTest::Unit::TestCase
       "+---+---+---+ | c | c | c |\n" +
       "| a | a | a | +---+---+---+\n" +
       "+---+---+---+",
-      layout.to_s)
+      grid.to_s)
 
     table4 = Dashline::Table.new
     table4.row 'a', 'a', 'a'
     table4.row 'a', 'a', 'a'
     table4.row 'a', 'a', 'a'
 
-    layout2 = Dashline::Layout.new
-    layout2.width 27
-    layout2.add table4
-    layout2.add table3
-    layout2.add table2
+    grid2 = Dashline::Grid.new
+    grid2.width 27
+    grid2.add table4
+    grid2.add table3
+    grid2.add table2
 
     assert_equal(
       "+---+---+---+ +---+---+---+\n" +
@@ -144,6 +144,6 @@ class DashlineLayoutTest < MiniTest::Unit::TestCase
       "| a | a | a | +---+---+---+\n" +
       "+---+---+---+ | b | b | b |\n" +
       "              +---+---+---+",
-      layout2.to_s)
+      grid2.to_s)
   end
 end

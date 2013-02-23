@@ -110,7 +110,7 @@ module Dashline
     end
   end
 
-  class Layout
+  class Grid
     def initialize
       @nodes = []
       @width = 80
