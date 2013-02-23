@@ -127,7 +127,11 @@ module Dashline
     def to_s
       buffer = []
       max_width = @nodes.map(&:total_width).max
+      per_row = @width / max_width
+      node_width = @width / per_row
       @nodes.each do |node|
+        node = node.clone
+        node.width(node_width)
         if (index = buffer.index { |l| l.length < @width })
           node.to_s.split("\n").each do |line|
             buffer[index] = " "*(buffer[index-1].length-line.length-1) if buffer[index].nil?

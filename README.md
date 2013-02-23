@@ -22,12 +22,12 @@ TODO
 
 * find better way to grab # of cols
 * handle colorized strings when determining strlen
-* add layout options
 * add bar chart
 * add bar chart "separator" and "annotations/titles"
 * add bar chart width option
 * handle bar chart colored bars
 * handle bar charts in layout
+* error handling: grid without tables, tables without rows
 
 License
 =======
