@@ -97,6 +97,11 @@ class DashlineTableTest < MiniTest::Unit::TestCase
   end
 end
 
+class DashlineChartTest < MiniTest::Unit::TestCase
+  def test_basic_chart
+  end
+end
+
 class DashlineGridTest < MiniTest::Unit::TestCase
   def test_basic_grid
     table = Dashline::Table.new

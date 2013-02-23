@@ -4,7 +4,14 @@ require 'colorize'
 module Dashline
   VERSION = '0.0.1'
 
-  class Table
+  class Node
+    def width(width); raise NotImplementedError; end
+    def to_s; raise NotImplementedError; end
+    def total_width; raise NotImplementedError; end
+    def total_height; raise NotImplementedError; end
+  end
+
+  class Table < Node
     def initialize
       @rows = []
       @separators = []
@@ -108,6 +115,9 @@ module Dashline
         widths
       end
     end
+  end
+
+  class Chart < Node
   end
 
   class Grid
