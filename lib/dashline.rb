@@ -9,6 +9,24 @@ module Dashline
     def to_s; raise NotImplementedError; end
     def total_width; raise NotImplementedError; end
     def total_height; raise NotImplementedError; end
+
+    private
+    def cell(data, width, align=:left)
+      str = data.to_s
+      if str.length > width
+        str[0...width]
+      elsif align == :center
+        lpad = " " * ((width - str.length) / 2)
+        rpad = lpad.clone
+        lpad += " " if (width - str.length).odd?
+        lpad + str + rpad
+      else
+        pad = " " * (width - str.length)
+        align == :left ?
+          "#{str}#{pad}" :
+          "#{pad}#{str}"
+      end
+    end
   end
 
   class Table < Node
@@ -69,24 +87,6 @@ module Dashline
     end
 
     private
-
-    def cell(data, width, align=:left)
-      str = data.to_s
-      if str.length > width
-        str[0...width]
-      elsif align == :center
-        lpad = " " * ((width - str.length) / 2)
-        rpad = lpad.clone
-        lpad += " " if (width - str.length).odd?
-        lpad + str + rpad
-      else
-        pad = " " * (width - str.length)
-        align == :left ?
-          "#{str}#{pad}" :
-          "#{pad}#{str}"
-      end
-    end
-
     def col_widths
       cols = @rows.first.size # TODO: find better way to grab # of cols
       widths = [0] * cols
@@ -118,6 +118,48 @@ module Dashline
   end
 
   class Chart < Node
+    def initialize
+      @title = nil
+      @rows = []
+    end
+
+    def title(title)
+      @title = title
+    end
+
+    def row(label, num)
+      @rows << [label, num]
+    end
+
+    def to_s
+      wbar, wlabel, wtitle = bar_width, label_width, title_width
+      width = [wbar + wlabel + 1, wtitle].max
+      separator = "+-#{'-'*width}-+"
+      format = [separator]
+      if @title
+        format << "| #{cell(@title, width)} |"
+        format << separator
+      end
+      @rows.each do |label, num|
+        bar = '=' * num
+        format << "| #{cell(label, wlabel, :right)} #{cell(bar, wbar)} |"
+      end
+      format << separator
+      format.join("\n")
+    end
+
+    private
+    def bar_width
+      @rows.map { |row| row[1] }.max
+    end
+
+    def label_width
+      @rows.map { |row| row[0].to_s.length }.max
+    end
+
+    def title_width
+      @title.to_s.length
+    end
   end
 
   class Grid

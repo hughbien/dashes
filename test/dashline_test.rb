@@ -99,6 +99,23 @@ end
 
 class DashlineChartTest < MiniTest::Unit::TestCase
   def test_basic_chart
+    chart = Dashline::Chart.new
+    chart.title 'Title'
+    chart.row 'a', 20
+    chart.row 'bb', 15
+    chart.row 'ccc', 5
+    chart.row 'dddd', 1
+
+    assert_equal(
+      "+---------------------------+\n" +
+      "| Title                     |\n" +
+      "+---------------------------+\n" +
+      "|    a ==================== |\n" +
+      "|   bb ===============      |\n" +
+      "|  ccc =====                |\n" +
+      "| dddd =                    |\n" +
+      "+---------------------------+",
+      chart.to_s)
   end
 end
 
