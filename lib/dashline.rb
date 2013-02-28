@@ -12,19 +12,24 @@ module Dashline
     private
     def cell(data, width, align=:left)
       str = data.to_s
-      if str.length > width
+      length = strlen(str)
+      if length > width
         str[0...width]
       elsif align == :center
-        lpad = " " * ((width - str.length) / 2)
+        lpad = " " * ((width - length) / 2)
         rpad = lpad.clone
-        lpad += " " if (width - str.length).odd?
+        lpad += " " if (width - length).odd?
         lpad + str + rpad
       else
-        pad = " " * (width - str.length)
+        pad = " " * (width - length)
         align == :left ?
           "#{str}#{pad}" :
           "#{pad}#{str}"
       end
+    end
+
+    def strlen(str)
+      str.nil? ? 0 : str.uncolorize.length
     end
   end
 
@@ -88,7 +93,7 @@ module Dashline
       widths = [0] * cols
       (0...cols).map do |col|
         @rows.each do |row|
-          widths[col] = [row[col].length, widths[col]].max
+          widths[col] = [strlen(row[col]), widths[col]].max
         end
       end
       pad = (2 * cols) + (cols + 1) # cell padding/borders
@@ -163,11 +168,11 @@ module Dashline
     end
 
     def label_width
-      @rows.map { |row| row[0].to_s.length }.max
+      @rows.map { |row| strlen(row[0]) }.max
     end
 
     def title_width
-      @title.to_s.length
+      strlen(@title)
     end
   end
 
@@ -193,9 +198,11 @@ module Dashline
       @nodes.each do |node|
         node = node.clone
         node.width(node_width)
-        if (index = buffer.index { |l| l.length < @width })
+        if (index = buffer.index { |l| l.uncolorize.length < @width })
           node.to_s.split("\n").each do |line|
-            buffer[index] = " "*(buffer[index-1].length-line.length-1) if buffer[index].nil?
+            prev_length = buffer[index-1].uncolorize.length
+            curr_length = line.uncolorize.length
+            buffer[index] = " "*(prev_length - curr_length - 1) if buffer[index].nil?
             buffer[index] += " #{line}"
             index += 1
           end
