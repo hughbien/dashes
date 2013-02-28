@@ -185,4 +185,27 @@ class DashlineGridTest < MiniTest::Unit::TestCase
       "              +---+---+---+",
       grid2.to_s)
   end
+
+  def test_mixed_grid
+    table = Dashline::Table.new
+    table.row 'a', 'a', 'a'
+    table.row 'a', 'a', 'a'
+    table.row 'a', 'a', 'a'
+
+    chart = Dashline::Chart.new
+    chart.row 'a', 5
+    chart.row 'bb', 3
+    chart.row 'ccc', 1
+
+    grid = Dashline::Grid.new
+    grid.add table
+    grid.add chart
+    assert_equal(
+      "+---+---+---+ +-----------+\n" +
+      "| a | a | a | |   a ===== |\n" +
+      "| a | a | a | |  bb ===   |\n" +
+      "| a | a | a | | ccc =     |\n" +
+      "+---+---+---+ +-----------+",
+      grid.to_s)
+  end
 end

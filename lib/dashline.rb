@@ -156,6 +156,15 @@ module Dashline
       format.join("\n")
     end
 
+    def total_height
+      @rows.length + 2 + (@title.nil? ? 0 : 2) # 2 for borders
+    end
+
+    def total_width
+      # 4 for padding/borders
+      @width || [bar_width + label_width + 1, title_width].max + 4
+    end
+
     private
     def bar_width
       @rows.map { |row| row[1] }.max
