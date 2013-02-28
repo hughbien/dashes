@@ -21,6 +21,8 @@ TODO
 ====
 
 * find better way to grab # of cols
+* set table total width
+* auto expand nodes in grid
 * handle colorized strings when determining strlen
 * add bar chart
 * add bar chart "separator" and "annotations/titles"

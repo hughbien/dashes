@@ -121,6 +121,7 @@ module Dashline
     def initialize
       @title = nil
       @rows = []
+      @width = nil
     end
 
     def title(title)
@@ -131,18 +132,25 @@ module Dashline
       @rows << [label, num]
     end
 
+    def width(width)
+      @width = width
+    end
+
     def to_s
       wbar, wlabel, wtitle = bar_width, label_width, title_width
-      width = [wbar + wlabel + 1, wtitle].max
-      separator = "+-#{'-'*width}-+"
+      wtotal = @width ? (@width - 4) : [wbar + wlabel + 1, wtitle].max
+      bar_space = wtotal - wlabel - 1
+      bar_ratio = wbar > bar_space ? bar_space/wbar.to_f : 1
+
+      separator = "+-#{'-'*wtotal}-+"
       format = [separator]
       if @title
-        format << "| #{cell(@title, width)} |"
+        format << "| #{cell(@title, wtotal)} |"
         format << separator
       end
       @rows.each do |label, num|
-        bar = '=' * num
-        format << "| #{cell(label, wlabel, :right)} #{cell(bar, wbar)} |"
+        bar = '=' * (num * bar_ratio).floor
+        format << "| #{cell(label, wlabel, :right)} #{cell(bar, bar_space)} |"
       end
       format << separator
       format.join("\n")

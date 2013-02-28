@@ -117,6 +117,23 @@ class DashlineChartTest < MiniTest::Unit::TestCase
       "+---------------------------+",
       chart.to_s)
   end
+
+  def test_normalized_width
+    chart = Dashline::Chart.new
+    chart.width(29)
+    chart.row 'a', 40
+    chart.row 'bb', 30
+    chart.row 'ccc', 10
+    chart.row 'dddd', 2
+    assert_equal(
+      "+---------------------------+\n" +
+      "|    a ==================== |\n" +
+      "|   bb ===============      |\n" +
+      "|  ccc =====                |\n" +
+      "| dddd =                    |\n" +
+      "+---------------------------+",
+      chart.to_s)
+  end
 end
 
 class DashlineGridTest < MiniTest::Unit::TestCase
