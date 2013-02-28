@@ -28,6 +28,7 @@ class DashlineTableTest < MiniTest::Unit::TestCase
     table.separator
 
     assert_equal([5, 6, 5], table.send(:col_widths))
+    assert_equal(26, table.total_width)
     assert_equal(
       "+-------+--------+-------+\n" +
       "+-------+--------+-------+\n" +
@@ -61,6 +62,7 @@ class DashlineTableTest < MiniTest::Unit::TestCase
     table = Dashline::Table.new
     table.width 26
     table.row '1', '2', '3'
+    assert_equal(26, table.total_width)
     assert_equal(
       "+--------+-------+-------+\n" +
       "| 1      | 2     | 3     |\n" +

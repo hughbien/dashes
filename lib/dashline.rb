@@ -8,7 +8,6 @@ module Dashline
     def width(width); raise NotImplementedError; end
     def to_s; raise NotImplementedError; end
     def total_width; raise NotImplementedError; end
-    def total_height; raise NotImplementedError; end
 
     private
     def cell(data, width, align=:left)
@@ -76,12 +75,9 @@ module Dashline
       format.join("\n")
     end
 
-    def total_height
-      @rows.length + @separators.length + 2 # 2 for top/bottom borders
-    end
-
     def total_width
-      width = @width || col_widths.reduce { |a,b| a+b }
+      return @width if @width
+      width = col_widths.reduce { |a,b| a+b }
       cols = @rows.first.size
       width + (2 * cols) + (cols + 1)
     end
@@ -154,10 +150,6 @@ module Dashline
       end
       format << separator
       format.join("\n")
-    end
-
-    def total_height
-      @rows.length + 2 + (@title.nil? ? 0 : 2) # 2 for borders
     end
 
     def total_width
