@@ -80,11 +80,6 @@ Development
 
 Tests are setup to run via `ruby test/*_test.rb` or via `rake`.
 
-TODO
-====
-
-* fix uncolorize strings for lengths
-
 License
 =======
 

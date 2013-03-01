@@ -242,7 +242,10 @@ module Dashline
               buffer[index] = "#{" "*@width}"
             end
             new_line = col == 0 ?  "#{line} " : " #{line}"
-            buffer[index][col..(col+node_width)] = new_line
+            # handle offset from special characters like color strings
+            pre_line = buffer[index].split(space_matcher).first.to_s
+            offset = pre_line.length - Dashline.clean(pre_line).length
+            buffer[index][col+offset..(col+node_width+offset)] = new_line
             index += 1
           end
         else
