@@ -198,37 +198,23 @@ module Dashline
         node = node.clone
         node.width(node_width)
         if (index = buffer.index { |l| l.include?(space_matcher) }) 
-          # there's space on the left side, fill it out
+          # there's space for the table in a row, fit it in
           col = buffer[index] =~ Regexp.new(space_matcher)
           node.to_s.split("\n").each do |line|
             if buffer[index].nil?
-              buffer[index] = "#{" "*col}#{line}"
-            else
-              new_line = buffer[index] =~ /^(\s|$)/ ?
-                "#{line} " :
-                " #{line}"
-              buffer[index].sub!(space_matcher, new_line)
+              buffer[index] = "#{" "*@width}"
             end
-            index += 1
-          end
-        elsif (index = buffer.index { |l| l.uncolorize.length + node_width < @width })
-          # there's space on the right side, fill it out
-          node.to_s.split("\n").each do |line|
-           if buffer[index].nil?
-              prev_length = buffer[index-1].uncolorize.length
-              curr_length = buffer[index].to_s.uncolorize.length
-              next_length = line.uncolorize.length
-              buffer[index] = " "*(prev_length - curr_length - next_length - 1)
-            end
-            buffer[index] += " #{line}"
+            new_line = col == 0 ?  "#{line} " : " #{line}"
+            buffer[index][col..(col+node_width)] = new_line
             index += 1
           end
         else
           # there's no more room, just add the table below
-          buffer += node.to_s.split("\n")
+          rpad = " "*(@width - node_width)
+          buffer += node.to_s.split("\n").map { |line| "#{line}#{rpad}" }
         end
       end
-      buffer.join("\n")
+      buffer.map(&:rstrip).join("\n")
     end
   end
 end
