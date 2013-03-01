@@ -1,8 +1,18 @@
 require 'rubygems'
-require 'colorize'
 
 module Dashline
   VERSION = '0.0.1'
+
+  def self.clean(str)
+    str.to_s.
+      gsub(/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/, '').
+      gsub(/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/, '').
+      gsub(/(\x03|\x1a)/, '')
+  end
+
+  def self.strlen(str)
+    str.nil? ? 0 : clean(str).length
+  end
 
   class Node
     def width(width); raise NotImplementedError; end
@@ -13,7 +23,7 @@ module Dashline
     private
     def cell(data, width, align=:left)
       str = data.to_s
-      length = strlen(str)
+      length = Dashline.strlen(str)
       if length > width
         str[0...width]
       elsif align == :center
@@ -27,10 +37,6 @@ module Dashline
           "#{str}#{pad}" :
           "#{pad}#{str}"
       end
-    end
-
-    def strlen(str)
-      str.nil? ? 0 : str.uncolorize.length
     end
   end
 
@@ -107,7 +113,7 @@ module Dashline
       widths = [0] * cols
       (0...cols).map do |col|
         @rows.each do |row|
-          widths[col] = [strlen(row[col]), widths[col]].max
+          widths[col] = [Dashline.strlen(row[col]), widths[col]].max
         end
       end
       pad = (2 * cols) + (cols + 1) # cell padding/borders
@@ -198,11 +204,11 @@ module Dashline
     end
 
     def label_width
-      @rows.map { |row| strlen(row[0]) }.max
+      @rows.map { |row| Dashline.strlen(row[0]) }.max
     end
 
     def title_width
-      strlen(@title)
+      Dashline.strlen(@title)
     end
   end
 
@@ -230,7 +236,7 @@ module Dashline
         node.width(node_width)
         if (index = buffer.index { |l| l.include?(space_matcher) }) 
           # there's space for the table in a row, fit it in
-          col = buffer[index] =~ Regexp.new(space_matcher)
+          col = Dashline.clean(buffer[index]) =~ Regexp.new(space_matcher)
           node.to_s.split("\n").each do |line|
             if buffer[index].nil?
               buffer[index] = "#{" "*@width}"
