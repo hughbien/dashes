@@ -106,7 +106,7 @@ class DashlineTableTest < MiniTest::Unit::TestCase
 
   def test_max_width
     table = Dashline::Table.new
-    table.max_width 27
+    table.max_width 26
     table.row 'First', 'Second', 'Third'
     table.row 1, 2, 3
     assert_equal(
@@ -122,6 +122,14 @@ class DashlineTableTest < MiniTest::Unit::TestCase
       "| F | Se | T |\n" +
       "| 1 | 2  | 3 |\n" +
       "+---+----+---+",
+      table.to_s)
+
+    table.width 26 # width takes priority
+    assert_equal(
+      "+-------+--------+-------+\n" +
+      "| First | Second | Third |\n" +
+      "| 1     | 2      | 3     |\n" +
+      "+-------+--------+-------+",
       table.to_s)
   end
 end
@@ -199,6 +207,16 @@ class DashlineChartTest < MiniTest::Unit::TestCase
       "|  ccc ==   |\n" +
       "| dddd =    |\n" +
       "+-----------+",
+      chart2.to_s)
+
+    chart2.width(17) # width should take priority
+    assert_equal(
+      "+---------------+\n" +
+      "|    a ======== |\n" +
+      "|   bb ======   |\n" +
+      "|  ccc ====     |\n" +
+      "| dddd ==       |\n" +
+      "+---------------+",
       chart2.to_s)
   end
 end

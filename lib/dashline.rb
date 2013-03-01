@@ -88,15 +88,16 @@ module Dashline
     end
 
     def total_width
-      return 0 if @rows.empty?
-      if @width
-        twidth = @width
+      if @rows.empty?
+        0
+      elsif @width
+        @width
       else
         width = col_widths.reduce { |a,b| a+b }
         cols = @rows.first.size
         twidth = width + (2 * cols) + (cols + 1)
+        @max_width ? [twidth, @max_width].min : twidth
       end
-      @max_width ? [twidth, @max_width].min : twidth
     end
 
     private
@@ -111,7 +112,7 @@ module Dashline
       end
       pad = (2 * cols) + (cols + 1) # cell padding/borders
       sum = widths.reduce {|a,b| a+b} + pad
-      if (@width.nil? || sum == @width) && (@max_width.nil? || sum <= @max_width)
+      if sum == @width || (@width.nil? && (@max_width.nil? || sum <= @max_width))
         widths
       else
         indexes = (0...cols).to_a
@@ -120,8 +121,7 @@ module Dashline
           cols = @spacing.select { |s| s == :max }.length
           indexes = @spacing.each_index.select { |i| @spacing[i] == :max }
         end
-        twidth = @width || sum
-        twidth = @max_width ? [@max_width, twidth].min : twidth
+        twidth = @width || (@max_width ? [sum, @max_width].min : sum)
         delta = twidth >= sum ? 1 : -1
         pad = ((twidth - sum).abs / cols) * delta
         uneven = (twidth - sum).abs % cols
@@ -181,10 +181,15 @@ module Dashline
     end
 
     def total_width
-      return 0 if @rows.empty?
-      # 4 for padding/borders
-      twidth = @width || [bar_width + label_width + 1, title_width].max + 4
-      @max_width ? [twidth, @max_width].min : twidth
+      if @rows.empty?
+        0
+      elsif @width
+        @width
+      else
+        # 4 for borders/padding
+        twidth = [bar_width + label_width + 1, title_width].max + 4
+        @max_width ? [twidth, @max_width].min : twidth
+      end
     end
 
     private

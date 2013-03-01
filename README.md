@@ -83,7 +83,6 @@ Tests are setup to run via `ruby test/*_test.rb` or via `rake`.
 TODO
 ====
 
-* width should take priority over max_width
 * fix uncolorize strings for lengths
 
 License
