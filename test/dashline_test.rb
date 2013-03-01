@@ -2,6 +2,12 @@ require File.expand_path('../lib/dashline', File.dirname(__FILE__))
 require 'minitest/autorun'
 
 class DashlineTableTest < MiniTest::Unit::TestCase
+  def test_empty
+    table = Dashline::Table.new
+    assert_equal('', table.to_s)
+    assert_equal(0, table.total_width)
+  end
+
   def test_cell
     table = Dashline::Table.new
     assert_equal("x", table.send(:cell, "x", 1))
@@ -121,6 +127,12 @@ class DashlineTableTest < MiniTest::Unit::TestCase
 end
 
 class DashlineChartTest < MiniTest::Unit::TestCase
+  def test_empty
+    chart = Dashline::Chart.new
+    assert_equal('', chart.to_s)
+    assert_equal(0, chart.total_width)
+  end
+
   def test_basic_chart
     chart = Dashline::Chart.new
     chart.title 'Title'
@@ -192,6 +204,15 @@ class DashlineChartTest < MiniTest::Unit::TestCase
 end
 
 class DashlineGridTest < MiniTest::Unit::TestCase
+  def test_empty
+    grid = Dashline::Grid.new
+    assert_equal('', grid.to_s)
+
+    grid.add Dashline::Table.new
+    grid.add Dashline::Chart.new
+    assert_equal('', grid.to_s)
+  end
+
   def test_basic_grid
     table = Dashline::Table.new
     table.row 'a', 'a', 'a'

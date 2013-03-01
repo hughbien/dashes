@@ -21,7 +21,6 @@ TODO
 ====
 
 * fix uncolorize strings for lengths
-* error handling: grid without tables, tables without rows
 
 License
 =======

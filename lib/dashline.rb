@@ -69,6 +69,7 @@ module Dashline
     end
 
     def to_s
+      return '' if @rows.empty?
       widths = col_widths
       format = []
       separator = "+-#{widths.map {|w| '-'*w}.join('-+-')}-+"
@@ -87,6 +88,7 @@ module Dashline
     end
 
     def total_width
+      return 0 if @rows.empty?
       if @width
         twidth = @width
       else
@@ -99,7 +101,8 @@ module Dashline
 
     private
     def col_widths
-      cols = @rows.first.size # TODO: find better way to grab # of cols
+      return [] if @rows.empty?
+      cols = @rows.first.size
       widths = [0] * cols
       (0...cols).map do |col|
         @rows.each do |row|
@@ -157,6 +160,7 @@ module Dashline
     end
 
     def to_s
+      return '' if @rows.empty?
       wbar, wlabel = bar_width, label_width
       wtotal = total_width - 4 # 4 for side borders and padding
       bar_space = wtotal - wlabel - 1
@@ -177,6 +181,7 @@ module Dashline
     end
 
     def total_width
+      return 0 if @rows.empty?
       # 4 for padding/borders
       twidth = @width || [bar_width + label_width + 1, title_width].max + 4
       @max_width ? [twidth, @max_width].min : twidth
@@ -211,6 +216,7 @@ module Dashline
     end
 
     def to_s
+      return '' if @nodes.empty?
       buffer = []
       node_width = [@nodes.map(&:total_width).max, @width].min
       space_matcher = " "*(node_width+1) # 1 for padding
