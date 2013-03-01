@@ -210,4 +210,31 @@ class DashlineGridTest < MiniTest::Unit::TestCase
       "+---+---+---+ +-----------+",
       grid.to_s)
   end
+
+  def test_alternating_grid
+    short = Dashline::Table.new
+    short.row 'a', 'a', 'a'
+
+    short2 = Dashline::Table.new
+    short2.row 'b', 'b', 'b'
+
+    long = Dashline::Table.new
+    long.row 'd', 'd', 'd'
+    long.row 'd', 'd', 'd'
+    long.row 'd', 'd', 'd'
+
+    grid = Dashline::Grid.new
+    grid.width(27)
+    grid.add short
+    grid.add long
+    grid.add short2
+    assert_equal(
+      "+---+---+---+ +---+---+---+\n" +
+      "| a | a | a | | d | d | d |\n" +
+      "+---+---+---+ | d | d | d |\n" +
+      "+---+---+---+ | d | d | d |\n" +
+      "| b | b | b | +---+---+---+\n" +
+      "+---+---+---+",
+      grid.to_s)
+  end
 end

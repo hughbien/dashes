@@ -193,18 +193,38 @@ module Dashline
     def to_s
       buffer = []
       node_width = [@nodes.map(&:total_width).max, @width].min
+      space_matcher = " "*(node_width+1) # 1 for padding
       @nodes.each do |node|
         node = node.clone
         node.width(node_width)
-        if (index = buffer.index { |l| l.uncolorize.length < @width })
+        if (index = buffer.index { |l| l.include?(space_matcher) }) 
+          # there's space on the left side, fill it out
+          col = buffer[index] =~ Regexp.new(space_matcher)
           node.to_s.split("\n").each do |line|
-            prev_length = buffer[index-1].uncolorize.length
-            curr_length = line.uncolorize.length
-            buffer[index] = " "*(prev_length - curr_length - 1) if buffer[index].nil?
+            if buffer[index].nil?
+              buffer[index] = "#{" "*col}#{line}"
+            else
+              new_line = buffer[index] =~ /^(\s|$)/ ?
+                "#{line} " :
+                " #{line}"
+              buffer[index].sub!(space_matcher, new_line)
+            end
+            index += 1
+          end
+        elsif (index = buffer.index { |l| l.uncolorize.length < @width })
+          # there's space on the right side, fill it out
+          node.to_s.split("\n").each do |line|
+           if buffer[index].nil?
+              prev_length = buffer[index-1].uncolorize.length
+              curr_length = buffer[index].to_s.uncolorize.length
+              next_length = line.uncolorize.length
+              buffer[index] = " "*(prev_length - curr_length - next_length - 1)
+            end
             buffer[index] += " #{line}"
             index += 1
           end
         else
+          # there's no more room, just add the table below
           buffer += node.to_s.split("\n")
         end
       end

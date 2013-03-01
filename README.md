@@ -21,7 +21,6 @@ TODO
 ====
 
 * find better way to grab # of cols
-* add bar chart color option
 * error handling: grid without tables, tables without rows
 
 License
