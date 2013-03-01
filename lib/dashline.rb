@@ -6,6 +6,7 @@ module Dashline
 
   class Node
     def width(width); raise NotImplementedError; end
+    def max_width(max_width); raise NotImplementedError; end
     def to_s; raise NotImplementedError; end
     def total_width; raise NotImplementedError; end
 
@@ -39,6 +40,7 @@ module Dashline
       @separators = []
       @aligns = []
       @width = nil
+      @max_width = nil
       @spacing = nil
     end
 
@@ -56,6 +58,10 @@ module Dashline
 
     def width(width)
       @width = width
+    end
+
+    def max_width(max_width)
+      @max_width = max_width
     end
 
     def spacing(*spacing)
@@ -81,10 +87,14 @@ module Dashline
     end
 
     def total_width
-      return @width if @width
-      width = col_widths.reduce { |a,b| a+b }
-      cols = @rows.first.size
-      width + (2 * cols) + (cols + 1)
+      if @width
+        twidth = @width
+      else
+        width = col_widths.reduce { |a,b| a+b }
+        cols = @rows.first.size
+        twidth = width + (2 * cols) + (cols + 1)
+      end
+      @max_width ? [twidth, @max_width].min : twidth
     end
 
     private
@@ -98,7 +108,7 @@ module Dashline
       end
       pad = (2 * cols) + (cols + 1) # cell padding/borders
       sum = widths.reduce {|a,b| a+b} + pad
-      if @width.nil? || sum == @width
+      if (@width.nil? || sum == @width) && (@max_width.nil? || sum <= @max_width)
         widths
       else
         indexes = (0...cols).to_a
@@ -107,11 +117,15 @@ module Dashline
           cols = @spacing.select { |s| s == :max }.length
           indexes = @spacing.each_index.select { |i| @spacing[i] == :max }
         end
-        pad = (@width - sum) / cols
-        uneven = (@width - sum) % cols
+        twidth = @width || sum
+        twidth = @max_width ? [@max_width, twidth].min : twidth
+        delta = twidth >= sum ? 1 : -1
+        pad = ((twidth - sum).abs / cols) * delta
+        uneven = (twidth - sum).abs % cols
         indexes.each do |index|
           widths[index] += pad
-          widths[index] += 1 if index < uneven
+          widths[index] += delta if index < uneven
+          widths[index] = 0 if widths[index] < 0
         end
         widths
       end
@@ -123,6 +137,7 @@ module Dashline
       @title = nil
       @rows = []
       @width = nil
+      @max_width = nil
     end
 
     def title(title)
@@ -137,9 +152,13 @@ module Dashline
       @width = width
     end
 
+    def max_width(max_width)
+      @max_width = max_width
+    end
+
     def to_s
-      wbar, wlabel, wtitle = bar_width, label_width, title_width
-      wtotal = @width ? (@width - 4) : [wbar + wlabel + 1, wtitle].max
+      wbar, wlabel = bar_width, label_width
+      wtotal = total_width - 4 # 4 for side borders and padding
       bar_space = wtotal - wlabel - 1
       bar_ratio = wbar > bar_space ? bar_space/wbar.to_f : 1
 
@@ -159,7 +178,8 @@ module Dashline
 
     def total_width
       # 4 for padding/borders
-      @width || [bar_width + label_width + 1, title_width].max + 4
+      twidth = @width || [bar_width + label_width + 1, title_width].max + 4
+      @max_width ? [twidth, @max_width].min : twidth
     end
 
     private

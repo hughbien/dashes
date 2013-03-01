@@ -20,7 +20,7 @@ Tests are setup to run via `ruby test/*_test.rb` or via `rake`.
 TODO
 ====
 
-* find better way to grab # of cols
+* fix uncolorize strings for lengths
 * error handling: grid without tables, tables without rows
 
 License

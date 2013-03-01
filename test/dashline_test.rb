@@ -97,6 +97,27 @@ class DashlineTableTest < MiniTest::Unit::TestCase
       "+--------+-------+-------+",
       table.to_s)
   end
+
+  def test_max_width
+    table = Dashline::Table.new
+    table.max_width 27
+    table.row 'First', 'Second', 'Third'
+    table.row 1, 2, 3
+    assert_equal(
+      "+-------+--------+-------+\n" +
+      "| First | Second | Third |\n" +
+      "| 1     | 2      | 3     |\n" +
+      "+-------+--------+-------+",
+      table.to_s)
+
+    table.max_width 14
+    assert_equal(
+      "+---+----+---+\n" +
+      "| F | Se | T |\n" +
+      "| 1 | 2  | 3 |\n" +
+      "+---+----+---+",
+      table.to_s)
+  end
 end
 
 class DashlineChartTest < MiniTest::Unit::TestCase
@@ -135,6 +156,38 @@ class DashlineChartTest < MiniTest::Unit::TestCase
       "| dddd =                    |\n" +
       "+---------------------------+",
       chart.to_s)
+  end
+
+  def test_max_width
+    chart = Dashline::Chart.new
+    chart.max_width(100)
+    chart.row 'a', 4
+    chart.row 'bb', 3
+    chart.row 'ccc', 2
+    chart.row 'dddd', 1
+    assert_equal(
+      "+-----------+\n" +
+      "|    a ==== |\n" +
+      "|   bb ===  |\n" +
+      "|  ccc ==   |\n" +
+      "| dddd =    |\n" +
+      "+-----------+",
+      chart.to_s)
+
+    chart2 = Dashline::Chart.new
+    chart2.max_width(13)
+    chart2.row 'a', 8
+    chart2.row 'bb', 6
+    chart2.row 'ccc', 4
+    chart2.row 'dddd', 2
+    assert_equal(
+      "+-----------+\n" +
+      "|    a ==== |\n" +
+      "|   bb ===  |\n" +
+      "|  ccc ==   |\n" +
+      "| dddd =    |\n" +
+      "+-----------+",
+      chart2.to_s)
   end
 end
 
