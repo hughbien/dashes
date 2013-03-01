@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.description = 'Format data into a dashboard of charts/tables on the command line.'
  
   s.required_rubygems_version = '>= 1.3.6'
-  s.add_dependency 'colorize'
   s.add_development_dependency 'minitest'
  
   s.files         = Dir.glob('*.{md}') +
