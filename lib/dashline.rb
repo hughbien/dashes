@@ -211,7 +211,7 @@ module Dashline
             end
             index += 1
           end
-        elsif (index = buffer.index { |l| l.uncolorize.length < @width })
+        elsif (index = buffer.index { |l| l.uncolorize.length + node_width < @width })
           # there's space on the right side, fill it out
           node.to_s.split("\n").each do |line|
            if buffer[index].nil?
