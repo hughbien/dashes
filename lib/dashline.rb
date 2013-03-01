@@ -192,9 +192,7 @@ module Dashline
 
     def to_s
       buffer = []
-      max_width = @nodes.map(&:total_width).max
-      per_row = @width / max_width
-      node_width = @width / per_row
+      node_width = [@nodes.map(&:total_width).max, @width].min
       @nodes.each do |node|
         node = node.clone
         node.width(node_width)
