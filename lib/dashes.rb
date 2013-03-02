@@ -1,6 +1,6 @@
 require 'rubygems'
 
-module Dashline
+module Dashes
   VERSION = '0.0.1'
 
   def self.clean(str)
@@ -23,7 +23,7 @@ module Dashline
     private
     def cell(data, width, align=:left)
       str = data.to_s
-      length = Dashline.strlen(str)
+      length = Dashes.strlen(str)
       if length > width
         str[0...width]
       elsif align == :center
@@ -113,7 +113,7 @@ module Dashline
       widths = [0] * cols
       (0...cols).map do |col|
         @rows.each do |row|
-          widths[col] = [Dashline.strlen(row[col]), widths[col]].max
+          widths[col] = [Dashes.strlen(row[col]), widths[col]].max
         end
       end
       pad = (2 * cols) + (cols + 1) # cell padding/borders
@@ -204,11 +204,11 @@ module Dashline
     end
 
     def label_width
-      @rows.map { |row| Dashline.strlen(row[0]) }.max
+      @rows.map { |row| Dashes.strlen(row[0]) }.max
     end
 
     def title_width
-      Dashline.strlen(@title)
+      Dashes.strlen(@title)
     end
   end
 
@@ -236,7 +236,7 @@ module Dashline
         node.width(node_width)
         if (index = buffer.index { |l| l.include?(space_matcher) }) 
           # there's space for the table in a row, fit it in
-          col = Dashline.clean(buffer[index]) =~ Regexp.new(space_matcher)
+          col = Dashes.clean(buffer[index]) =~ Regexp.new(space_matcher)
           node.to_s.split("\n").each do |line|
             if buffer[index].nil?
               buffer[index] = "#{" "*@width}"
@@ -244,7 +244,7 @@ module Dashline
             new_line = col == 0 ?  "#{line} " : " #{line}"
             # handle offset from special characters like color strings
             pre_line = buffer[index].split(space_matcher).first.to_s
-            offset = pre_line.length - Dashline.clean(pre_line).length
+            offset = pre_line.length - Dashes.clean(pre_line).length
             buffer[index][col+offset..(col+node_width+offset)] = new_line
             index += 1
           end

@@ -1,29 +1,29 @@
-require File.expand_path('../lib/dashline', File.dirname(__FILE__))
+require File.expand_path('../lib/dashes', File.dirname(__FILE__))
 require 'minitest/autorun'
 
-class DashlineTableTest < MiniTest::Unit::TestCase
+class DashesTableTest < MiniTest::Unit::TestCase
   def test_empty
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     assert_equal('', table.to_s)
     assert_equal(0, table.total_width)
   end
 
   def test_cell
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     assert_equal("x", table.send(:cell, "x", 1))
     assert_equal("xx", table.send(:cell, "xxxxx", 2))
     assert_equal("x    ", table.send(:cell, "x", 5))
   end
 
   def test_cell_alignment
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     assert_equal("x  ", table.send(:cell, "x", 3, :left))
     assert_equal(" x ", table.send(:cell, "x", 3, :center))
     assert_equal("  x", table.send(:cell, "x", 3, :right))
   end
 
   def test_separators
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     table.separator
     table.separator
     table.row 'First', 'Second', 'Third'
@@ -50,7 +50,7 @@ class DashlineTableTest < MiniTest::Unit::TestCase
   end
 
   def test_alignment
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     table.align :left, :center, :right
     table.row 'First', 'Second', 'Third'
     table.separator
@@ -65,7 +65,7 @@ class DashlineTableTest < MiniTest::Unit::TestCase
   end
 
   def test_width
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     table.width 26
     table.row '1', '2', '3'
     assert_equal(26, table.total_width)
@@ -105,7 +105,7 @@ class DashlineTableTest < MiniTest::Unit::TestCase
   end
 
   def test_max_width
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     table.max_width 26
     table.row 'First', 'Second', 'Third'
     table.row 1, 2, 3
@@ -134,15 +134,15 @@ class DashlineTableTest < MiniTest::Unit::TestCase
   end
 end
 
-class DashlineChartTest < MiniTest::Unit::TestCase
+class DashesChartTest < MiniTest::Unit::TestCase
   def test_empty
-    chart = Dashline::Chart.new
+    chart = Dashes::Chart.new
     assert_equal('', chart.to_s)
     assert_equal(0, chart.total_width)
   end
 
   def test_basic_chart
-    chart = Dashline::Chart.new
+    chart = Dashes::Chart.new
     chart.title 'Title'
     chart.row 'a', 20
     chart.row 'bb', 15
@@ -162,7 +162,7 @@ class DashlineChartTest < MiniTest::Unit::TestCase
   end
 
   def test_normalized_width
-    chart = Dashline::Chart.new
+    chart = Dashes::Chart.new
     chart.width(29)
     chart.row 'a', 40
     chart.row 'bb', 30
@@ -179,7 +179,7 @@ class DashlineChartTest < MiniTest::Unit::TestCase
   end
 
   def test_max_width
-    chart = Dashline::Chart.new
+    chart = Dashes::Chart.new
     chart.max_width(100)
     chart.row 'a', 4
     chart.row 'bb', 3
@@ -194,7 +194,7 @@ class DashlineChartTest < MiniTest::Unit::TestCase
       "+-----------+",
       chart.to_s)
 
-    chart2 = Dashline::Chart.new
+    chart2 = Dashes::Chart.new
     chart2.max_width(13)
     chart2.row 'a', 8
     chart2.row 'bb', 6
@@ -221,29 +221,29 @@ class DashlineChartTest < MiniTest::Unit::TestCase
   end
 end
 
-class DashlineGridTest < MiniTest::Unit::TestCase
+class DashesGridTest < MiniTest::Unit::TestCase
   def test_empty
-    grid = Dashline::Grid.new
+    grid = Dashes::Grid.new
     assert_equal('', grid.to_s)
 
-    grid.add Dashline::Table.new
-    grid.add Dashline::Chart.new
+    grid.add Dashes::Table.new
+    grid.add Dashes::Chart.new
     assert_equal('', grid.to_s)
   end
 
   def test_basic_grid
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     table.row 'a', 'a', 'a'
     table.separator
     table.row 'a', 'a', 'a'
     table.separator
     table.row 'a', 'a', 'a'
-    table2 = Dashline::Table.new
+    table2 = Dashes::Table.new
     table2.row 'b', 'b', 'b'
-    table3 = Dashline::Table.new
+    table3 = Dashes::Table.new
     table3.row 'c', 'c', 'c'
 
-    grid = Dashline::Grid.new
+    grid = Dashes::Grid.new
     grid.width 27
     grid.add table
     grid.add table2
@@ -259,12 +259,12 @@ class DashlineGridTest < MiniTest::Unit::TestCase
       "+---+---+---+",
       grid.to_s)
 
-    table4 = Dashline::Table.new
+    table4 = Dashes::Table.new
     table4.row 'a', 'a', 'a'
     table4.row 'a', 'a', 'a'
     table4.row 'a', 'a', 'a'
 
-    grid2 = Dashline::Grid.new
+    grid2 = Dashes::Grid.new
     grid2.width 27
     grid2.add table4
     grid2.add table3
@@ -281,17 +281,17 @@ class DashlineGridTest < MiniTest::Unit::TestCase
   end
 
   def test_mixed_grid
-    table = Dashline::Table.new
+    table = Dashes::Table.new
     table.row 'a', 'a', 'a'
     table.row 'a', 'a', 'a'
     table.row 'a', 'a', 'a'
 
-    chart = Dashline::Chart.new
+    chart = Dashes::Chart.new
     chart.row 'a', 5
     chart.row 'bb', 3
     chart.row 'ccc', 1
 
-    grid = Dashline::Grid.new
+    grid = Dashes::Grid.new
     grid.add table
     grid.add chart
     assert_equal(
@@ -304,18 +304,18 @@ class DashlineGridTest < MiniTest::Unit::TestCase
   end
 
   def test_alternating_grid
-    short = Dashline::Table.new
+    short = Dashes::Table.new
     short.row 'a', 'a', 'a'
 
-    short2 = Dashline::Table.new
+    short2 = Dashes::Table.new
     short2.row 'b', 'b', 'b'
 
-    long = Dashline::Table.new
+    long = Dashes::Table.new
     long.row 'd', 'd', 'd'
     long.row 'd', 'd', 'd'
     long.row 'd', 'd', 'd'
 
-    grid = Dashline::Grid.new
+    grid = Dashes::Grid.new
     grid.width(27)
     grid.add short
     grid.add long

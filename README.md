@@ -1,19 +1,19 @@
 Description
 ===========
 
-Dashline formats data into a dashboard of charts/tables on the command line.
+Dashes formats data into a dashboard of charts/tables on the command line.
 
 Installation
 ============
 
-    $ gem install dashline
+    $ gem install dashes
 
 Usage
 =====
 
 Making a table:
 
-    > table = Dashline::Table.new
+    > table = Dashes::Table.new
     > table.align :left, :right, :right  # :center is available too
     > table.row 'Label', 'Num', 'Pct'
     > table.separator
@@ -36,7 +36,7 @@ Some display options for tables:
 
 Making a chart:
 
-    > chart = Dashline::Chart.new
+    > chart = Dashes::Chart.new
     > chart.title 'Title'
     > chart.row 'First', 7
     > chart.row 'Second', 12
@@ -57,7 +57,7 @@ Some display options for charts:
 
 Combine tables and charts into a grid:
 
-    > grid = Dashline::Grid.new
+    > grid = Dashes::Grid.new
     > grid.width(30) # 80 is the default , use `tput cols`.to_i for max width
     > grid.add table1
     > grid.add chart1

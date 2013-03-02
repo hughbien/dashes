@@ -1,4 +1,4 @@
-require File.expand_path('lib/dashline', File.dirname(__FILE__))
+require File.expand_path('lib/dashes', File.dirname(__FILE__))
 require 'rake/testtask'
 
 task :default => :test
@@ -8,7 +8,7 @@ Rake::TestTask.new do |t|
 end
 
 task :build do
-  `gem build dashline.gemspec`
+  `gem build dashes.gemspec`
 end
 
 task :clean do
@@ -16,5 +16,5 @@ task :clean do
 end
 
 task :push => :build do
-  `gem push dashline-#{Dashline::VERSION}.gem`
+  `gem push dashes-#{Dashes::VERSION}.gem`
 end

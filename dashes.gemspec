@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
-  s.name        = 'dashline'
+  s.name        = 'dashes'
   s.version     = '0.0.1'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Hugh Bien']
   s.email       = ['hugh@hughbien.com']
-  s.homepage    = 'https://github.com/hughbien/dashline'
+  s.homepage    = 'https://github.com/hughbien/dashes'
   s.summary     = 'Good looking charts for your terminal.'
   s.description = 'Format data into a dashboard of charts/tables on the command line.'
  
