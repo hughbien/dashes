@@ -1,7 +1,7 @@
 require 'rubygems'
 
 module Dashes
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 
   def self.clean(str)
     str.to_s.
