@@ -52,26 +52,32 @@ module Dashes
 
     def row(*data)
       @rows << data.map(&:to_s)
+      self
     end
 
     def separator
       @separators << @rows.length
+      self
     end
 
     def align(*alignments)
       @aligns = alignments
+      self
     end
 
     def width(width)
       @width = width
+      self
     end
 
     def max_width(max_width)
       @max_width = max_width
+      self
     end
 
     def spacing(*spacing)
       @spacing = spacing
+      self
     end
 
     def to_s
@@ -151,18 +157,22 @@ module Dashes
 
     def title(title)
       @title = title
+      self
     end
 
     def row(label, num)
       @rows << [label, num]
+      self
     end
 
     def width(width)
       @width = width
+      self
     end
 
     def max_width(max_width)
       @max_width = max_width
+      self
     end
 
     def to_s
@@ -218,12 +228,14 @@ module Dashes
       @width = 80
     end
 
-    def add(node)
-      @nodes << node
+    def add(*nodes)
+      @nodes += nodes
+      self
     end
 
     def width(width)
       @width = width
+      self
     end
 
     def to_s

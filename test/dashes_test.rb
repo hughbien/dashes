@@ -23,15 +23,15 @@ class DashesTableTest < MiniTest::Unit::TestCase
   end
 
   def test_separators
-    table = Dashes::Table.new
-    table.separator
-    table.separator
-    table.row 'First', 'Second', 'Third'
-    table.separator
-    table.separator
-    table.row 1, 2, 3
-    table.separator
-    table.separator
+    table = Dashes::Table.new.
+      separator.
+      separator.
+      row('First', 'Second', 'Third').
+      separator.
+      separator.
+      row(1, 2, 3).
+      separator.
+      separator
 
     assert_equal([5, 6, 5], table.send(:col_widths))
     assert_equal(26, table.total_width)
@@ -50,11 +50,11 @@ class DashesTableTest < MiniTest::Unit::TestCase
   end
 
   def test_alignment
-    table = Dashes::Table.new
-    table.align :left, :center, :right
-    table.row 'First', 'Second', 'Third'
-    table.separator
-    table.row 1, 2, 3
+    table = Dashes::Table.new.
+      align(:left, :center, :right).
+      row('First', 'Second', 'Third').
+      separator.
+      row(1, 2, 3)
     assert_equal(
       "+-------+--------+-------+\n" +
       "| First | Second | Third |\n" +
@@ -65,9 +65,9 @@ class DashesTableTest < MiniTest::Unit::TestCase
   end
 
   def test_width
-    table = Dashes::Table.new
-    table.width 26
-    table.row '1', '2', '3'
+    table = Dashes::Table.new.
+      width(26).
+      row('1', '2', '3')
     assert_equal(26, table.total_width)
     assert_equal(
       "+--------+-------+-------+\n" +
@@ -75,28 +75,28 @@ class DashesTableTest < MiniTest::Unit::TestCase
       "+--------+-------+-------+",
       table.to_s)
 
-    table.spacing :min, :min, :max
+    table.spacing(:min, :min, :max)
     assert_equal(
       "+---+---+----------------+\n" +
       "| 1 | 2 | 3              |\n" +
       "+---+---+----------------+",
       table.to_s)
 
-    table.spacing :max, :max, :min
+    table.spacing(:max, :max, :min)
     assert_equal(
       "+----------+---------+---+\n" +
       "| 1        | 2       | 3 |\n" +
       "+----------+---------+---+",
       table.to_s)
 
-    table.spacing :min, :min, :min
+    table.spacing(:min, :min, :min)
     assert_equal(
       "+--------+-------+-------+\n" +
       "| 1      | 2     | 3     |\n" +
       "+--------+-------+-------+",
       table.to_s)
 
-    table.spacing :max, :max, :max
+    table.spacing(:max, :max, :max)
     assert_equal(
       "+--------+-------+-------+\n" +
       "| 1      | 2     | 3     |\n" +
@@ -105,10 +105,10 @@ class DashesTableTest < MiniTest::Unit::TestCase
   end
 
   def test_max_width
-    table = Dashes::Table.new
-    table.max_width 26
-    table.row 'First', 'Second', 'Third'
-    table.row 1, 2, 3
+    table = Dashes::Table.new.
+      max_width(26).
+      row('First', 'Second', 'Third').
+      row(1, 2, 3)
     assert_equal(
       "+-------+--------+-------+\n" +
       "| First | Second | Third |\n" +
@@ -116,7 +116,7 @@ class DashesTableTest < MiniTest::Unit::TestCase
       "+-------+--------+-------+",
       table.to_s)
 
-    table.max_width 14
+    table.max_width(14)
     assert_equal(
       "+---+----+---+\n" +
       "| F | Se | T |\n" +
@@ -124,7 +124,7 @@ class DashesTableTest < MiniTest::Unit::TestCase
       "+---+----+---+",
       table.to_s)
 
-    table.width 26 # width takes priority
+    table.width(26) # width takes priority
     assert_equal(
       "+-------+--------+-------+\n" +
       "| First | Second | Third |\n" +
@@ -142,12 +142,12 @@ class DashesChartTest < MiniTest::Unit::TestCase
   end
 
   def test_basic_chart
-    chart = Dashes::Chart.new
-    chart.title 'Title'
-    chart.row 'a', 20
-    chart.row 'bb', 15
-    chart.row 'ccc', 5
-    chart.row 'dddd', 1
+    chart = Dashes::Chart.new.
+      title('Title').
+      row('a', 20).
+      row('bb', 15).
+      row('ccc', 5).
+      row('dddd', 1)
 
     assert_equal(
       "+---------------------------+\n" +
@@ -162,12 +162,12 @@ class DashesChartTest < MiniTest::Unit::TestCase
   end
 
   def test_normalized_width
-    chart = Dashes::Chart.new
-    chart.width(29)
-    chart.row 'a', 40
-    chart.row 'bb', 30
-    chart.row 'ccc', 10
-    chart.row 'dddd', 2
+    chart = Dashes::Chart.new.
+      width(29).
+      row('a', 40).
+      row('bb', 30).
+      row('ccc', 10).
+      row('dddd', 2)
     assert_equal(
       "+---------------------------+\n" +
       "|    a ==================== |\n" +
@@ -179,12 +179,12 @@ class DashesChartTest < MiniTest::Unit::TestCase
   end
 
   def test_max_width
-    chart = Dashes::Chart.new
-    chart.max_width(100)
-    chart.row 'a', 4
-    chart.row 'bb', 3
-    chart.row 'ccc', 2
-    chart.row 'dddd', 1
+    chart = Dashes::Chart.new.
+      max_width(100).
+      row('a', 4).
+      row('bb', 3).
+      row('ccc', 2).
+      row('dddd', 1)
     assert_equal(
       "+-----------+\n" +
       "|    a ==== |\n" +
@@ -194,12 +194,12 @@ class DashesChartTest < MiniTest::Unit::TestCase
       "+-----------+",
       chart.to_s)
 
-    chart2 = Dashes::Chart.new
-    chart2.max_width(13)
-    chart2.row 'a', 8
-    chart2.row 'bb', 6
-    chart2.row 'ccc', 4
-    chart2.row 'dddd', 2
+    chart2 = Dashes::Chart.new.
+      max_width(13).
+      row('a', 8).
+      row('bb', 6).
+      row('ccc', 4).
+      row('dddd', 2)
     assert_equal(
       "+-----------+\n" +
       "|    a ==== |\n" +
@@ -226,29 +226,19 @@ class DashesGridTest < MiniTest::Unit::TestCase
     grid = Dashes::Grid.new
     assert_equal('', grid.to_s)
 
-    grid.add Dashes::Table.new
-    grid.add Dashes::Chart.new
+    grid.add(Dashes::Table.new, Dashes::Chart.new)
     assert_equal('', grid.to_s)
   end
 
   def test_basic_grid
-    table = Dashes::Table.new
-    table.row 'a', 'a', 'a'
-    table.separator
-    table.row 'a', 'a', 'a'
-    table.separator
-    table.row 'a', 'a', 'a'
-    table2 = Dashes::Table.new
-    table2.row 'b', 'b', 'b'
-    table3 = Dashes::Table.new
-    table3.row 'c', 'c', 'c'
+    table = Dashes::Table.new.
+      row('a', 'a', 'a').separator.
+      row('a', 'a', 'a').separator.
+      row('a', 'a', 'a')
+    table2 = Dashes::Table.new.row('b', 'b', 'b')
+    table3 = Dashes::Table.new.row('c', 'c', 'c')
 
-    grid = Dashes::Grid.new
-    grid.width 27
-    grid.add table
-    grid.add table2
-    grid.add table3
-
+    grid = Dashes::Grid.new.width(27).add(table, table2, table3)
     assert_equal(
       "+---+---+---+ +---+---+---+\n" +
       "| a | a | a | | b | b | b |\n" +
@@ -259,17 +249,12 @@ class DashesGridTest < MiniTest::Unit::TestCase
       "+---+---+---+",
       grid.to_s)
 
-    table4 = Dashes::Table.new
-    table4.row 'a', 'a', 'a'
-    table4.row 'a', 'a', 'a'
-    table4.row 'a', 'a', 'a'
+    table4 = Dashes::Table.new.
+      row('a', 'a', 'a').
+      row('a', 'a', 'a').
+      row('a', 'a', 'a')
 
-    grid2 = Dashes::Grid.new
-    grid2.width 27
-    grid2.add table4
-    grid2.add table3
-    grid2.add table2
-
+    grid2 = Dashes::Grid.new.width(27).add(table4, table3, table2)
     assert_equal(
       "+---+---+---+ +---+---+---+\n" +
       "| a | a | a | | c | c | c |\n" +
@@ -281,19 +266,17 @@ class DashesGridTest < MiniTest::Unit::TestCase
   end
 
   def test_mixed_grid
-    table = Dashes::Table.new
-    table.row 'a', 'a', 'a'
-    table.row 'a', 'a', 'a'
-    table.row 'a', 'a', 'a'
+    table = Dashes::Table.new.
+      row('a', 'a', 'a').
+      row('a', 'a', 'a').
+      row('a', 'a', 'a')
 
-    chart = Dashes::Chart.new
-    chart.row 'a', 5
-    chart.row 'bb', 3
-    chart.row 'ccc', 1
+    chart = Dashes::Chart.new.
+      row('a', 5).
+      row('bb', 3).
+      row('ccc', 1)
 
-    grid = Dashes::Grid.new
-    grid.add table
-    grid.add chart
+    grid = Dashes::Grid.new.add(table, chart)
     assert_equal(
       "+---+---+---+ +-----------+\n" +
       "| a | a | a | |   a ===== |\n" +
@@ -304,22 +287,16 @@ class DashesGridTest < MiniTest::Unit::TestCase
   end
 
   def test_alternating_grid
-    short = Dashes::Table.new
-    short.row 'a', 'a', 'a'
+    short = Dashes::Table.new.row('a', 'a', 'a')
 
-    short2 = Dashes::Table.new
-    short2.row 'b', 'b', 'b'
+    short2 = Dashes::Table.new.row('b', 'b', 'b')
 
-    long = Dashes::Table.new
-    long.row 'd', 'd', 'd'
-    long.row 'd', 'd', 'd'
-    long.row 'd', 'd', 'd'
+    long = Dashes::Table.new.
+      row('d', 'd', 'd').
+      row('d', 'd', 'd').
+      row('d', 'd', 'd')
 
-    grid = Dashes::Grid.new
-    grid.width(27)
-    grid.add short
-    grid.add long
-    grid.add short2
+    grid = Dashes::Grid.new.width(27).add(short, long, short2)
     assert_equal(
       "+---+---+---+ +---+---+---+\n" +
       "| a | a | a | | d | d | d |\n" +
