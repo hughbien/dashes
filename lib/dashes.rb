@@ -1,7 +1,7 @@
 require 'rubygems'
 
 module Dashes
-  VERSION = '0.0.2'
+  VERSION = '0.0.3'
 
   class Node
     def width(width); raise NotImplementedError; end
