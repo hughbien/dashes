@@ -3,17 +3,6 @@ require 'rubygems'
 module Dashes
   VERSION = '0.0.2'
 
-  def self.clean(str)
-    str.to_s.
-      gsub(/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/, '').
-      gsub(/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/, '').
-      gsub(/(\x03|\x1a)/, '')
-  end
-
-  def self.strlen(str)
-    str.nil? ? 0 : clean(str).length
-  end
-
   class Node
     def width(width); raise NotImplementedError; end
     def max_width(max_width); raise NotImplementedError; end
@@ -23,7 +12,7 @@ module Dashes
     private
     def cell(data, width, align=:left)
       str = data.to_s
-      length = Dashes.strlen(str)
+      length = str.length
       if length > width
         str[0...width]
       elsif align == :center
@@ -119,7 +108,7 @@ module Dashes
       widths = [0] * cols
       (0...cols).map do |col|
         @rows.each do |row|
-          widths[col] = [Dashes.strlen(row[col]), widths[col]].max
+          widths[col] = [row[col].length, widths[col]].max
         end
       end
       pad = (2 * cols) + (cols + 1) # cell padding/borders
@@ -214,11 +203,11 @@ module Dashes
     end
 
     def label_width
-      @rows.map { |row| Dashes.strlen(row[0]) }.max
+      @rows.map { |row| row[0].length }.max
     end
 
     def title_width
-      Dashes.strlen(@title)
+      @title.to_s.length
     end
   end
 
@@ -248,16 +237,13 @@ module Dashes
         node.width(node_width)
         if (index = buffer.index { |l| l.include?(space_matcher) }) 
           # there's space for the table in a row, fit it in
-          col = Dashes.clean(buffer[index]) =~ Regexp.new(space_matcher)
+          col = buffer[index] =~ Regexp.new(space_matcher)
           node.to_s.split("\n").each do |line|
             if buffer[index].nil?
               buffer[index] = "#{" "*@width}"
             end
             new_line = col == 0 ?  "#{line} " : " #{line}"
-            # handle offset from special characters like color strings
-            pre_line = buffer[index].split(space_matcher).first.to_s
-            offset = pre_line.length - Dashes.clean(pre_line).length
-            buffer[index][col+offset..(col+node_width+offset)] = new_line
+            buffer[index][col..(col+node_width)] = new_line
             index += 1
           end
         else
